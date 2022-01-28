@@ -32,6 +32,7 @@ class MyWebServer(socketserver.BaseRequestHandler):
     
     def handle(self):
         self.data = self.request.recv(1024).strip()
+        #print ("Got a request of: %s\n" % self.data)
 
         # check if self.data is empty
         if self.data == "":
@@ -136,20 +137,20 @@ class MyWebServer(socketserver.BaseRequestHandler):
         if status_code == "405":
             # https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/405
 
-            http_response = f"HTTP/1.1 {status_code} {self.get_status_code_description(status_code)}\r\nAllow: GET\r\n"
+            http_response = f"HTTP/1.1 {status_code} {self.get_status_code_description(status_code)}\r\nAllow: GET\r\n\r\nContent-length:0"
 
             return http_response
         
         elif status_code == "301":
             # https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/301
 
-            http_response = f"HTTP/1.1 {status_code} {self.get_status_code_description(status_code)}\r\n Location: {path}/"
+            http_response = f"HTTP/1.1 {status_code} {self.get_status_code_description(status_code)}\r\n Location: {path}/\r\nContent-length:0\r\nConnection: close"
             return http_response
 
         elif status_code == "404":
             # https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
 
-            http_response = f"HTTP/1.1 {status_code} {self.get_status_code_description(status_code)}"
+            http_response = f"HTTP/1.1 {status_code} {self.get_status_code_description(status_code)}\r\nContent-length:0"
 
             return http_response
         
